@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Ondato.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Constants\" />
+    <Folder Include="Enums\" />
+    <Folder Include="IHelpers\IConnections\" />
+    <Folder Include="IHelpers\IGenerators\" />
+    <Folder Include="IHttpClients\" />
+  </ItemGroup>
+
+</Project>
