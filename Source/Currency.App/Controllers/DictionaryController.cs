@@ -1,7 +1,6 @@
 ﻿using Ondato.Domain.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.Swagger.Annotations;
 using System.Net;
 using System.Threading.Tasks;
 using Ondato.Api.Models.DictionaryController;
@@ -21,7 +20,6 @@ namespace Ondato.Api.Controllers
 
 
         [HttpPost("Create")]
-        [SwaggerOperation("Create")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
@@ -38,7 +36,6 @@ namespace Ondato.Api.Controllers
         }
 
         [HttpPut("Append")]
-        [SwaggerOperation("Append")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
@@ -56,7 +53,6 @@ namespace Ondato.Api.Controllers
         }
 
         [HttpDelete("Delete")]
-        [SwaggerOperation("Delete")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
@@ -73,7 +69,6 @@ namespace Ondato.Api.Controllers
         }
 
         [HttpGet("Get")]
-        [SwaggerOperation("Get")]
         [ProducesResponseType((int)HttpStatusCode.OK,Type = typeof(IEquatable<object>))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
