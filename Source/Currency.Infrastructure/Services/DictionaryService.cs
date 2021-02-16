@@ -17,25 +17,25 @@ namespace Ondato.Infrastructure.Services
             _repository = repository;
         }
 
-        public async Task Append(string key, object value)
+        async Task IDictionaryService.Append(string key, object value)
         {
             await _repository.Append(key, value.SerializeToByteArray())
                 .ConfigureAwait(false);
         }
 
-        public async Task Create(string key)
+        async Task IDictionaryService.Create(string key)
         {
             await _repository.Create(key)
                 .ConfigureAwait(false);
         }
 
-        public async Task Delete(string key)
+        async Task IDictionaryService.Delete(string key)
         {
             await _repository.Delete(key)
                 .ConfigureAwait(false);
         }
 
-        public async Task<List<object>> Get(string key)
+        async Task<List<object>> IDictionaryService.Get(string key)
         {
             var dictionaryValuesBytes = await _repository.Get(key)
                 .ConfigureAwait(false);
@@ -52,7 +52,7 @@ namespace Ondato.Infrastructure.Services
             return null;
         }
 
-        public async Task DeleteExpired()
+        async Task IDictionaryService.DeleteExpired()
         {
             var expirationDate = DateTime.Now.AddDays(AppSettings.ExpirationPeriod.Days)
                 .AddDays(AppSettings.ExpirationPeriod.Days)

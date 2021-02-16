@@ -19,12 +19,12 @@ namespace Ondato.Infrastructure.Repositories
         }
 
 
-        public async Task Create(string key)
+        async Task IDictionaryRepository.Create(string key)
         {
             using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 if (Context.DictionaryKeys.Any(dk => dk.Key == key))
-                    await Delete(key)
+                    await Delete(key:key)
                         .ConfigureAwait(false);
 
                 await Context.DictionaryKeys.AddAsync(new DictionaryKey { Key = key })
@@ -36,9 +36,10 @@ namespace Ondato.Infrastructure.Repositories
 
         }
 
-        public async Task Append(string key, byte[] value)
+        async Task IDictionaryRepository.Append(string key, byte[] value)
         {
-            using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled)) {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
                 var valueObj = new DictionaryValue { Key = key, Value = value };
 
                 var dictionaryKey = await Context.DictionaryKeys.SingleOrDefaultAsync(dk => dk.Key == key).ConfigureAwait(false);
@@ -60,19 +61,20 @@ namespace Ondato.Infrastructure.Repositories
             }
         }
 
-        public async Task Delete(string key)
+        async Task IDictionaryRepository.Delete(string key)
         {
-            await Context.DictionaryKeys.DeleteByKeyAsync(key)
+            await Delete(key:key)
                 .ConfigureAwait(false);
             await Context.SaveChangesAsync()
                 .ConfigureAwait(false);
         }
 
-        public async Task<List<byte[]>> Get(string key)
+        async Task<List<byte[]>> IDictionaryRepository.Get(string key)
         {
-            var dictionaryValue = await Context.DictionaryKeys.SingleOrDefaultAsync(dk=>dk.Key == key)
+            var dictionaryValue = await Context.DictionaryKeys.SingleOrDefaultAsync(dk => dk.Key == key)
                 .ConfigureAwait(false);
-            if (dictionaryValue != null) {
+            if (dictionaryValue != null)
+            {
                 dictionaryValue.UpdatedDate = DateTime.Now;
                 await Context.SaveChangesAsync()
                     .ConfigureAwait(false);
@@ -81,20 +83,31 @@ namespace Ondato.Infrastructure.Repositories
                     .ConfigureAwait(false);
             }
             return null;
-            
+
         }
 
-        public async Task Delete(DateTime dateTo)
+        async Task IDictionaryRepository.Delete(DateTime dateTo)
         {
             var trash = Context.DictionaryKeys.AsNoTracking().Where(dk => dk.UpdatedDate > dateTo).Select(dk => dk.Key).ToList();
-            if (trash.Count > 0)
-            {
-                await Context.DictionaryKeys.DeleteRangeByKeyAsync(trash)
-                       .ConfigureAwait(false);
-                await Context.SaveChangesAsync()
-                    .ConfigureAwait(false);
+            await Delete(keys: trash)
+                .ConfigureAwait(false);
+        }
+
+        async Task Delete(string key = null, IEnumerable<string> keys = null) {
+
+            if (!(key is null)) {
+                await Context.DictionaryKeys.DeleteByKeyAsync(key)
+                        .ConfigureAwait(false);
             }
 
+            if ((keys?.Count() ?? 0) > 0)
+            {
+                await Context.DictionaryKeys.DeleteRangeByKeyAsync(keys)
+                       .ConfigureAwait(false);
+            }
+
+            await Context.SaveChangesAsync()
+                    .ConfigureAwait(false);
         }
     }
 }
